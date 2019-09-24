@@ -1,14 +1,6 @@
 package gui;
 
-import java.net.URL;
-import java.util.ResourceBundle;
-
-import binpacking.BranchAndBound;
-import binpacking.BruteForce;
-import binpacking.DataManager;
-import binpacking.FirstFit;
-import binpacking.NextFit;
-import binpacking.Parameters;
+import binpacking.*;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -21,6 +13,10 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
+
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.ResourceBundle;
 
 public class MainWindowController implements Initializable {
 	@FXML 
@@ -72,7 +68,9 @@ public class MainWindowController implements Initializable {
 	
 	Stage stage;
 	DataManager mainData;
-	
+	String containersMessage = "";
+	private ArrayList<CheckBox> checkBoxes = new ArrayList<CheckBox>();
+
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		startButton.setDisable(true);
@@ -82,18 +80,34 @@ public class MainWindowController implements Initializable {
 		Parameters.stop = false;
 		itemsArea.setStyle("-fx-font-size: 11");
 		resultArea.setStyle("-fx-font-size: 11");
+		packCheckBoxes();
 	}
-	
+
+	private void packCheckBoxes() {
+		checkBoxes.add(nfRandom);
+		checkBoxes.add(ffRandom);
+		checkBoxes.add(bfRandom);
+		checkBoxes.add(babRandom);
+		checkBoxes.add(nfDec);
+		checkBoxes.add(ffDec);
+		checkBoxes.add(bfDec);
+		checkBoxes.add(babDec);
+		checkBoxes.add(nfInc);
+		checkBoxes.add(ffInc);
+		checkBoxes.add(bfInc);
+		checkBoxes.add(babInc);
+	}
+
 	@FXML
 	private void handleButtonAction(ActionEvent event) {
 		stage = (Stage) mainPane.getScene().getWindow();
 	    Parent root;
-		if(event.getSource()==generateButton){   
+		if(event.getSource()==generateButton){
 			itemsArea.clear();
-			
+
 			Parameters.minItemWeight = Integer.parseInt(minWeightField.getText());
 			Parameters.maxItemWeight = Integer.parseInt(maxWeightField.getText());
-			Parameters.itemsNumber = Integer.parseInt(itemsNumberField.getText()); 
+			Parameters.itemsNumber = Integer.parseInt(itemsNumberField.getText());
 			Parameters.containerVolume = Integer.parseInt(containerVolumeField.getText());
 			Thread thread = new Thread(() -> {
 				long startTime = System.currentTimeMillis();
@@ -106,7 +120,7 @@ public class MainWindowController implements Initializable {
 				});
 			thread.start();
 			startButton.setDisable(false);
-		}else if(event.getSource()==startButton){  
+		}else if(event.getSource()==startButton){
 			Parameters.stop = false;
 			stopButton.setDisable(false);
 			startButton.setDisable(true);
@@ -115,10 +129,8 @@ public class MainWindowController implements Initializable {
 				print("Items count: " + mainData.getItems().size(),resultArea);
 				print("Items size: "+ mainData.getTotalWeight(),resultArea);
 				print("Container size: "+ mainData.getContainerVolume(),resultArea);
-
 				print("\nResults:\n",resultArea);
 				print("Lower Bound: \t\t" + mainData.getLowerBound(),resultArea);
-			
 				solve();
 				print("\nCompleted",resultArea);
 				startButton.setDisable(false);
@@ -127,196 +139,102 @@ public class MainWindowController implements Initializable {
 			});
 			thread2.start();
 
-		}else if(event.getSource()==stopButton){  
+		}else if(event.getSource()==stopButton){
 			Parameters.stop = true;
 			startButton.setDisable(false);
-		}else if(event.getSource()==containerButton){  
+		}else if(event.getSource()==containerButton){
 			containerButton.setDisable(true);
-			printContainers();
+			print(containersMessage, resultArea);
 		}
-		
+
 	}
-	//old bad coding, need to fix this asap
-	DataManager dmnf;
-	DataManager dmff;
-	DataManager dmbf;
-	DataManager dmbab;
-	DataManager dmnfInc;
-	DataManager dmffInc;
-	DataManager dmbfInc;
-	DataManager dmbabInc;
-	DataManager dmnfDec;
-	DataManager dmffDec;
-	DataManager dmbfDec;
-	DataManager dmbabDec;
-	private void solve(){
-		if(nfRandom.isSelected() || ffRandom.isSelected() || bfRandom.isSelected() || babRandom.isSelected()) print("\nRandom: ",resultArea);
-		if(nfRandom.isSelected()){
-			long startTime = System.currentTimeMillis();
-			dmnf = new NextFit(mainData.getItems()).solve();
-			long stopTime = System.currentTimeMillis();
-			print("Next fit algorithm: \t\t" + dmnf.getResult() + " (Time: " + (stopTime - startTime) + "ms)",resultArea);
-		}
-		if(ffRandom.isSelected()){
-			long startTime = System.currentTimeMillis();
-			dmff = new FirstFit(mainData.getItems()).solve();
-			long stopTime = System.currentTimeMillis();
-			print("First fit algorithm: \t\t" + dmff.getResult() + " (Time: " + (stopTime - startTime) + "ms)",resultArea);
-		}
-		if(bfRandom.isSelected()){
-			long startTime = System.currentTimeMillis();
-			dmbf = new BruteForce(mainData.getItems()).solve();
-			long stopTime = System.currentTimeMillis();
-			print("BruteForce algorithm: \t" + dmbf.getResult() + " (Time: " + (stopTime - startTime) + "ms)",resultArea);
-		}
-		if(babRandom.isSelected()){
-			long startTime = System.currentTimeMillis();
-			dmbab = new BranchAndBound(mainData.getItems()).solve();
-			long stopTime = System.currentTimeMillis();
-			if(!Parameters.stop)print("B & B algorithm: \t\t" + dmbab.getResult() + " (Time: " + (stopTime - startTime) + "ms)",resultArea);
-			
-		}
-		if(nfInc.isSelected() || ffInc.isSelected() || bfInc.isSelected() || babInc.isSelected()){
-			print("\nIncreasing: ",resultArea);
-			mainData.sortInc();
-		}
-		if(nfInc.isSelected()){
-			long startTime = System.currentTimeMillis();
-			dmnfInc = new NextFit(mainData.getItemsInc()).solve();
-			long stopTime = System.currentTimeMillis();
-			print("Next fit algorithm: \t\t" + dmnfInc.getResult() + " (Time: " + (stopTime - startTime) + "ms)",resultArea);
-		}
-		if(ffInc.isSelected()){
-			long startTime = System.currentTimeMillis();
-			dmffInc = new FirstFit(mainData.getItemsInc()).solve();
-			long stopTime = System.currentTimeMillis();
-			print("First fit algorithm: \t\t" + dmffInc.getResult() + " (Time: " + (stopTime - startTime) + "ms)",resultArea);
-		}
-		if(bfInc.isSelected()){
-			long startTime = System.currentTimeMillis();
-			dmbfInc = new BruteForce(mainData.getItemsInc()).solve();
-			long stopTime = System.currentTimeMillis();
-			print("BruteForce algorithm: \t" + dmbfInc.getResult() + " (Time: " + (stopTime - startTime) + "ms)",resultArea);
-		}
-		if(babInc.isSelected()){
-			long startTime = System.currentTimeMillis();
-			dmbabInc = new BranchAndBound(mainData.getItemsInc()).solve();
-			long stopTime = System.currentTimeMillis();
-			if(!Parameters.stop)print("B&B algorithm: \t\t" + dmbabInc.getResult() + " (Time: " + (stopTime - startTime) + "ms)",resultArea);
-		}
 
-		if(nfDec.isSelected() || ffDec.isSelected() || bfDec.isSelected() || babDec.isSelected()){
-			print("\nDecreasing: ",resultArea);
-			mainData.sortDec();
-		}
+	private void solve() {
+		for (int i = 0; i < checkBoxes.size(); i++) {
+			CheckBox checkBox = checkBoxes.get(i);
+			DataManager tempDataManager = new DataManager();
+			String message = "";
 
-		if(nfDec.isSelected()){
+			if (i == 0) {
+				print("\nRandom: ", resultArea);
+			} else if (i == 4) {
+				mainData.sortInc();
+				print("\nDecreasing: ", resultArea);
+			} else if (i == 8) {
+				mainData.sortDec();
+				print("\nIncreasing: ", resultArea);
+			}
 			long startTime = System.currentTimeMillis();
-			dmnfDec = new NextFit(mainData.getItemsDec()).solve();
+			if (checkBox.getId().equals("nfRandom") && checkBox.isSelected()) {
+				tempDataManager = new NextFit(mainData.getItems()).solve();
+				message = "Next fit algorithm: \t\t";
+			}
+			if (checkBox.getId().equals("ffRandom") && checkBox.isSelected()) {
+				tempDataManager = new FirstFit(mainData.getItems()).solve();
+				message = "First fit algorithm: \t\t";
+			}
+			if (checkBox.getId().equals("bfRandom") && checkBox.isSelected()) {
+				tempDataManager = new BruteForce(mainData.getItems()).solve();
+				message = "BruteForce algorithm: \t";
+			}
+			if (checkBox.getId().equals("babRandom") && checkBox.isSelected()) {
+				tempDataManager = new BranchAndBound(mainData.getItems()).solve();
+				message = "B & B algorithm: \t\t";
+			}
+			if (checkBox.getId().equals("nfDec") && checkBox.isSelected()) {
+				tempDataManager = new NextFit(mainData.getItems()).solve();
+				message = "Next fit algorithm: \t\t";
+			}
+			if (checkBox.getId().equals("ffDec") && checkBox.isSelected()) {
+				tempDataManager = new FirstFit(mainData.getItems()).solve();
+				message = "First fit algorithm: \t\t";
+			}
+			if (checkBox.getId().equals("bfDec") && checkBox.isSelected()) {
+				tempDataManager = new BruteForce(mainData.getItems()).solve();
+				message = "BruteForce algorithm: \t";
+			}
+			if (checkBox.getId().equals("babDec") && checkBox.isSelected()) {
+				tempDataManager = new BranchAndBound(mainData.getItems()).solve();
+				message = "B & B algorithm: \t\t";
+			}
+			if (checkBox.getId().equals("nfInc") && checkBox.isSelected()) {
+				tempDataManager = new NextFit(mainData.getItems()).solve();
+				message = "Next fit algorithm: \t\t";
+			}
+			if (checkBox.getId().equals("ffInc") && checkBox.isSelected()) {
+				tempDataManager = new FirstFit(mainData.getItems()).solve();
+				message = "First fit algorithm: \t\t";
+			}
+			if (checkBox.getId().equals("bfInc") && checkBox.isSelected()) {
+				tempDataManager = new BruteForce(mainData.getItems()).solve();
+				message = "BruteForce algorithm: \t";
+			}
+			if (checkBox.getId().equals("babInc") && checkBox.isSelected()) {
+				tempDataManager = new BranchAndBound(mainData.getItems()).solve();
+				message = "B & B algorithm: \t\t";
+			}
 			long stopTime = System.currentTimeMillis();
-			print("Next fit algorithm: \t\t" + dmnfDec.getResult() + " (Time: " + (stopTime - startTime) + "ms)",resultArea);
-		}
-
-		if(ffDec.isSelected()){
-			long startTime = System.currentTimeMillis();
-			dmffDec = new FirstFit(mainData.getItemsDec()).solve();
-			long stopTime = System.currentTimeMillis();
-			print("First fit algorithm: \t\t" + dmffDec.getResult() + " (Time: " + (stopTime - startTime) + "ms)",resultArea);
-		}
-
-		if(bfDec.isSelected()){
-			long startTime = System.currentTimeMillis();
-			dmbfDec = new BruteForce(mainData.getItemsDec()).solve();
-			long stopTime = System.currentTimeMillis();
-			print("BruteForce algorithm: \t" + dmbfDec.getResult() + " (Time: " + (stopTime - startTime) + "ms)",resultArea);
-		}
-		if(babDec.isSelected()){
-			long startTime = System.currentTimeMillis();
-			dmbabDec = new BranchAndBound(mainData.getItemsDec()).solve();
-			long stopTime = System.currentTimeMillis();
-			if(!Parameters.stop)print("B&B algorithm: \t\t" + dmbabDec.getResult() + " (Time: " + (stopTime - startTime) + "ms)",resultArea);
+			if (message.length() > 0) {
+				containersMessage += getContainerString(message, i, tempDataManager);
+				print(message + tempDataManager.getResult() + " (Time: " + (stopTime - startTime) + "ms)", resultArea);
+			}
 		}
 	}
-	
-	private void printContainers(){
-		if(Parameters.itemsNumber<5000){
-		
-			if(nfRandom.isSelected()){
-				print("\n================================",resultArea);
-				print("Next Fit random: ", resultArea);
-				print("================================",resultArea);
-				print(dmnf.printContainers(),resultArea);
-			}
-			if(ffRandom.isSelected()){
-				print("\n================================",resultArea);
-				print("First Fit random: ", resultArea);
-				print("================================",resultArea);
-				print(dmff.printContainers(),resultArea);
-			}
-			if(bfRandom.isSelected()){
-				print("\n================================",resultArea);
-				print("Brute Force random: ", resultArea);
-				print("================================",resultArea);
-				print(dmbf.printContainers(),resultArea);
-			}
-			if(babRandom.isSelected()){
-				print("\n================================",resultArea);
-				print("B&B random: ", resultArea);
-				print("================================",resultArea);
-				print(dmbab.printContainers(),resultArea);
-			}
-			if(nfInc.isSelected()){
-				print("\n================================",resultArea);
-				print("Next Fit inc: ", resultArea);
-				print("================================",resultArea);
-				print(dmnfInc.printContainers(),resultArea);
-			}
-			if(ffInc.isSelected()){
-				print("\n================================",resultArea);
-				print("First Fit inc: ", resultArea);
-				print("================================",resultArea);
-				print(dmffInc.printContainers(),resultArea);
-			}
-			if(bfInc.isSelected()){
-				print("\n================================",resultArea);
-				print("Brute Force inc: ", resultArea);
-				print("================================",resultArea);
-				print(dmbfInc.printContainers(),resultArea);
-			}
-			if(babInc.isSelected()){
-				print("\n================================",resultArea);
-				print("B&B dec: ", resultArea);
-				print("================================",resultArea);
-				print(dmbabInc.printContainers(),resultArea);
-			}
-			if(nfDec.isSelected()){
-				print("\n================================",resultArea);
-				print("Next Fit dec: ", resultArea);
-				print("================================",resultArea);
-				print(dmnfDec.printContainers(),resultArea);
-			}
-			if(ffDec.isSelected()){
-				print("\n================================",resultArea);
-				print("First Fit dec: ", resultArea);
-				print("================================",resultArea);
-				print(dmffDec.printContainers(),resultArea);
-			}
-			if(bfDec.isSelected()){
-				print("\n================================",resultArea);
-				print("Brute Force dec: ", resultArea);
-				print("================================",resultArea);
-				print(dmbfDec.printContainers(),resultArea);
-			}
-			if(babDec.isSelected()){
-				print("\n================================",resultArea);
-				print("B&B dec: ", resultArea);
-				print("================================",resultArea);
-				print(dmbabDec.printContainers(),resultArea);
-			}
-		}else print("Too many items to display containers", resultArea);
+
+	private String getContainerString(String message, int i, DataManager dm) {
+		StringBuilder sb = new StringBuilder();
+		String type = "";
+		if (i < 4) type = "random";
+		else if (i < 8) type = "inc";
+		else type = "dec";
+		sb.append("\n================================\n");
+		sb.append(message.substring(0, message.length() - 4) + " " + type);
+		sb.append("\n================================");
+		sb.append(dm.printContainers());
+		return sb.toString();
 	}
-	
-	
+
+
 	void setDefaultValues(){
 		minWeightField.setText("5");
 		maxWeightField.setText("15");
