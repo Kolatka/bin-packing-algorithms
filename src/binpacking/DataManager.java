@@ -53,7 +53,7 @@ public class DataManager {
 	}
 
 	public String printItems(ArrayList<Item> items){
-		StringBuilder s = new StringBuilder("ID\t\tWAGA");
+		StringBuilder s = new StringBuilder("ID\t\tSIZE");
 		int size = items.size();
 		for(int i=0; i<size; i++){
 			s.append("\n").append(items.get(i).getId()).append("\t\t").append(items.get(i).getWeight());
@@ -65,11 +65,11 @@ public class DataManager {
 		StringBuilder s = new StringBuilder();
 		int size = getContainers().size();
 		for(int i=0; i<size; i++){
-			s.append("\nID\tWOLNE");
+			s.append("\nID\tFREE");
 			s.append("\n").append(getContainers().get(i).getId()).append("\t").append(getContainers().get(i).getLeftVolume());
 			int itemsSize = getContainers().get(i).getItems().size();
 			if (itemsSize>0){
-				s.append("\n\t\t\tID\t\tWaga");
+				s.append("\n\t\t\tID\t\tSIZE");
 				for(int j=0; j<itemsSize; j++){
 					s.append("\n\t\t\t").append(getContainers().get(i).getItems().get(j).getId()).append("\t\t").append(getContainers().get(i).getItems().get(j).getWeight());
 				}

@@ -100,9 +100,9 @@ public class MainWindowController implements Initializable {
 				mainData = new DataManager();
 				mainData.generateItems();
 				if(Parameters.itemsNumber<10000)print(mainData.printItems(mainData.getItems()),itemsArea);
-				else print("Zbyt wiele przedmiot�w �eby wy�wietli�",itemsArea);
+				else print("Too many items to display",itemsArea);
 				long stopTime = System.currentTimeMillis();
-				print("\nWygenerowano w: " + (stopTime - startTime) + "ms\n",itemsArea);
+				print("\nGenerated in: " + (stopTime - startTime) + "ms\n",itemsArea);
 				});
 			thread.start();
 			startButton.setDisable(false);
@@ -112,15 +112,15 @@ public class MainWindowController implements Initializable {
 			startButton.setDisable(true);
 			Thread thread2 = new Thread(() -> {
 				resultArea.clear();
-				print("Liczba przedmiot�w: " + mainData.getItems().size(),resultArea);
-				print("Rozmiar przedmiot�w: "+ mainData.getTotalWeight(),resultArea);
-				print("Rozmiar kontenera: "+ mainData.getContainerVolume(),resultArea);
+				print("Items count: " + mainData.getItems().size(),resultArea);
+				print("Items size: "+ mainData.getTotalWeight(),resultArea);
+				print("Container size: "+ mainData.getContainerVolume(),resultArea);
 
-				print("\nWyniki:\n",resultArea);
+				print("\nResults:\n",resultArea);
 				print("Lower Bound: \t\t" + mainData.getLowerBound(),resultArea);
 			
 				solve();
-				print("\nZakonczono",resultArea);
+				print("\nCompleted",resultArea);
 				startButton.setDisable(false);
 				containerButton.setDisable(false);
 				stopButton.setDisable(true);
@@ -150,63 +150,63 @@ public class MainWindowController implements Initializable {
 	DataManager dmbfDec;
 	DataManager dmbabDec;
 	private void solve(){
-		if(nfRandom.isSelected() || ffRandom.isSelected() || bfRandom.isSelected() || babRandom.isSelected()) print("\nLosowo: ",resultArea);
+		if(nfRandom.isSelected() || ffRandom.isSelected() || bfRandom.isSelected() || babRandom.isSelected()) print("\nRandom: ",resultArea);
 		if(nfRandom.isSelected()){
 			long startTime = System.currentTimeMillis();
 			dmnf = new NextFit(mainData.getItems()).solve();
 			long stopTime = System.currentTimeMillis();
-			print("Next fit algorithm: \t\t" + dmnf.getResult() + " (Czas: " + (stopTime - startTime) + "ms)",resultArea);
+			print("Next fit algorithm: \t\t" + dmnf.getResult() + " (Time: " + (stopTime - startTime) + "ms)",resultArea);
 		}
 		if(ffRandom.isSelected()){
 			long startTime = System.currentTimeMillis();
 			dmff = new FirstFit(mainData.getItems()).solve();
 			long stopTime = System.currentTimeMillis();
-			print("First fit algorithm: \t\t" + dmff.getResult() + " (Czas: " + (stopTime - startTime) + "ms)",resultArea);
+			print("First fit algorithm: \t\t" + dmff.getResult() + " (Time: " + (stopTime - startTime) + "ms)",resultArea);
 		}
 		if(bfRandom.isSelected()){
 			long startTime = System.currentTimeMillis();
 			dmbf = new BruteForce(mainData.getItems()).solve();
 			long stopTime = System.currentTimeMillis();
-			print("BruteForce algorithm: \t" + dmbf.getResult() + " (Czas: " + (stopTime - startTime) + "ms)",resultArea);
+			print("BruteForce algorithm: \t" + dmbf.getResult() + " (Time: " + (stopTime - startTime) + "ms)",resultArea);
 		}
 		if(babRandom.isSelected()){
 			long startTime = System.currentTimeMillis();
 			dmbab = new BranchAndBound(mainData.getItems()).solve();
 			long stopTime = System.currentTimeMillis();
-			if(!Parameters.stop)print("B & B algorithm: \t\t" + dmbab.getResult() + " (Czas: " + (stopTime - startTime) + "ms)",resultArea);
+			if(!Parameters.stop)print("B & B algorithm: \t\t" + dmbab.getResult() + " (Time: " + (stopTime - startTime) + "ms)",resultArea);
 			
 		}
 		if(nfInc.isSelected() || ffInc.isSelected() || bfInc.isSelected() || babInc.isSelected()){
-			print("\nRosn�co: ",resultArea);
+			print("\nIncreasing: ",resultArea);
 			mainData.sortInc();
 		}
 		if(nfInc.isSelected()){
 			long startTime = System.currentTimeMillis();
 			dmnfInc = new NextFit(mainData.getItemsInc()).solve();
 			long stopTime = System.currentTimeMillis();
-			print("Next fit algorithm: \t\t" + dmnfInc.getResult() + " (Czas: " + (stopTime - startTime) + "ms)",resultArea);
+			print("Next fit algorithm: \t\t" + dmnfInc.getResult() + " (Time: " + (stopTime - startTime) + "ms)",resultArea);
 		}
 		if(ffInc.isSelected()){
 			long startTime = System.currentTimeMillis();
 			dmffInc = new FirstFit(mainData.getItemsInc()).solve();
 			long stopTime = System.currentTimeMillis();
-			print("First fit algorithm: \t\t" + dmffInc.getResult() + " (Czas: " + (stopTime - startTime) + "ms)",resultArea);
+			print("First fit algorithm: \t\t" + dmffInc.getResult() + " (Time: " + (stopTime - startTime) + "ms)",resultArea);
 		}
 		if(bfInc.isSelected()){
 			long startTime = System.currentTimeMillis();
 			dmbfInc = new BruteForce(mainData.getItemsInc()).solve();
 			long stopTime = System.currentTimeMillis();
-			print("BruteForce algorithm: \t" + dmbfInc.getResult() + " (Czas: " + (stopTime - startTime) + "ms)",resultArea);
+			print("BruteForce algorithm: \t" + dmbfInc.getResult() + " (Time: " + (stopTime - startTime) + "ms)",resultArea);
 		}
 		if(babInc.isSelected()){
 			long startTime = System.currentTimeMillis();
 			dmbabInc = new BranchAndBound(mainData.getItemsInc()).solve();
 			long stopTime = System.currentTimeMillis();
-			if(!Parameters.stop)print("B & B algorithm: \t\t" + dmbabInc.getResult() + " (Czas: " + (stopTime - startTime) + "ms)",resultArea);
+			if(!Parameters.stop)print("B&B algorithm: \t\t" + dmbabInc.getResult() + " (Time: " + (stopTime - startTime) + "ms)",resultArea);
 		}
 
 		if(nfDec.isSelected() || ffDec.isSelected() || bfDec.isSelected() || babDec.isSelected()){
-			print("\nMalej�co: ",resultArea);
+			print("\nDecreasing: ",resultArea);
 			mainData.sortDec();
 		}
 
@@ -214,27 +214,27 @@ public class MainWindowController implements Initializable {
 			long startTime = System.currentTimeMillis();
 			dmnfDec = new NextFit(mainData.getItemsDec()).solve();
 			long stopTime = System.currentTimeMillis();
-			print("Next fit algorithm: \t\t" + dmnfDec.getResult() + " (Czas: " + (stopTime - startTime) + "ms)",resultArea);
+			print("Next fit algorithm: \t\t" + dmnfDec.getResult() + " (Time: " + (stopTime - startTime) + "ms)",resultArea);
 		}
 
 		if(ffDec.isSelected()){
 			long startTime = System.currentTimeMillis();
 			dmffDec = new FirstFit(mainData.getItemsDec()).solve();
 			long stopTime = System.currentTimeMillis();
-			print("First fit algorithm: \t\t" + dmffDec.getResult() + " (Czas: " + (stopTime - startTime) + "ms)",resultArea);
+			print("First fit algorithm: \t\t" + dmffDec.getResult() + " (Time: " + (stopTime - startTime) + "ms)",resultArea);
 		}
 
 		if(bfDec.isSelected()){
 			long startTime = System.currentTimeMillis();
 			dmbfDec = new BruteForce(mainData.getItemsDec()).solve();
 			long stopTime = System.currentTimeMillis();
-			print("BruteForce algorithm: \t" + dmbfDec.getResult() + " (Czas: " + (stopTime - startTime) + "ms)",resultArea);
+			print("BruteForce algorithm: \t" + dmbfDec.getResult() + " (Time: " + (stopTime - startTime) + "ms)",resultArea);
 		}
 		if(babDec.isSelected()){
 			long startTime = System.currentTimeMillis();
 			dmbabDec = new BranchAndBound(mainData.getItemsDec()).solve();
 			long stopTime = System.currentTimeMillis();
-			if(!Parameters.stop)print("B & B algorithm: \t\t" + dmbabDec.getResult() + " (Czas: " + (stopTime - startTime) + "ms)",resultArea);
+			if(!Parameters.stop)print("B&B algorithm: \t\t" + dmbabDec.getResult() + " (Time: " + (stopTime - startTime) + "ms)",resultArea);
 		}
 	}
 	
@@ -243,77 +243,77 @@ public class MainWindowController implements Initializable {
 		
 			if(nfRandom.isSelected()){
 				print("\n================================",resultArea);
-				print("Next Fit losowo: ", resultArea);
+				print("Next Fit random: ", resultArea);
 				print("================================",resultArea);
 				print(dmnf.printContainers(),resultArea);
 			}
 			if(ffRandom.isSelected()){
 				print("\n================================",resultArea);
-				print("First Fit losowo: ", resultArea);
+				print("First Fit random: ", resultArea);
 				print("================================",resultArea);
 				print(dmff.printContainers(),resultArea);
 			}
 			if(bfRandom.isSelected()){
 				print("\n================================",resultArea);
-				print("Brute Force losowo: ", resultArea);
+				print("Brute Force random: ", resultArea);
 				print("================================",resultArea);
 				print(dmbf.printContainers(),resultArea);
 			}
 			if(babRandom.isSelected()){
 				print("\n================================",resultArea);
-				print("B & B losowo: ", resultArea);
+				print("B&B random: ", resultArea);
 				print("================================",resultArea);
 				print(dmbab.printContainers(),resultArea);
 			}
 			if(nfInc.isSelected()){
 				print("\n================================",resultArea);
-				print("Next Fit rosn�co: ", resultArea);
+				print("Next Fit inc: ", resultArea);
 				print("================================",resultArea);
 				print(dmnfInc.printContainers(),resultArea);
 			}
 			if(ffInc.isSelected()){
 				print("\n================================",resultArea);
-				print("First Fit rosn�co: ", resultArea);
+				print("First Fit inc: ", resultArea);
 				print("================================",resultArea);
 				print(dmffInc.printContainers(),resultArea);
 			}
 			if(bfInc.isSelected()){
 				print("\n================================",resultArea);
-				print("Brute Force rosn�co: ", resultArea);
+				print("Brute Force inc: ", resultArea);
 				print("================================",resultArea);
 				print(dmbfInc.printContainers(),resultArea);
 			}
 			if(babInc.isSelected()){
 				print("\n================================",resultArea);
-				print("B & B rosn�co: ", resultArea);
+				print("B&B dec: ", resultArea);
 				print("================================",resultArea);
 				print(dmbabInc.printContainers(),resultArea);
 			}
 			if(nfDec.isSelected()){
 				print("\n================================",resultArea);
-				print("Next Fit malej�co: ", resultArea);
+				print("Next Fit dec: ", resultArea);
 				print("================================",resultArea);
 				print(dmnfDec.printContainers(),resultArea);
 			}
 			if(ffDec.isSelected()){
 				print("\n================================",resultArea);
-				print("First Fit malej�co: ", resultArea);
+				print("First Fit dec: ", resultArea);
 				print("================================",resultArea);
 				print(dmffDec.printContainers(),resultArea);
 			}
 			if(bfDec.isSelected()){
 				print("\n================================",resultArea);
-				print("Brute Force malej�co: ", resultArea);
+				print("Brute Force dec: ", resultArea);
 				print("================================",resultArea);
 				print(dmbfDec.printContainers(),resultArea);
 			}
 			if(babDec.isSelected()){
 				print("\n================================",resultArea);
-				print("B & B malej�co: ", resultArea);
+				print("B&B dec: ", resultArea);
 				print("================================",resultArea);
 				print(dmbabDec.printContainers(),resultArea);
 			}
-		}else print("Zbyt du�o przedmiot�w �eby wy�wietli� kontenery", resultArea);
+		}else print("Too many items to display containers", resultArea);
 	}
 	
 	
