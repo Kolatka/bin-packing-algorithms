@@ -58,7 +58,6 @@ public class BranchAndBound {
     long pb=0;
     void packBins (int k) { 
     	if(!Parameters.stop){
-	    	if(pb%10000000==0)System.out.println(pb);
 	    	pb++;
 	        int s; 
 			int b; 
@@ -70,15 +69,10 @@ public class BranchAndBound {
 			if(optcost > dm.getLowerBound()){
 			
 				if (k == list.size()) {
-				    bcount = binCount(); 
-				    System.out.println("running: " + bcount + " | " + optcost);
+				    bcount = binCount();
 				    if (bcount < optcost) {
 				    	optcost = bcount;  
 				    	optlist = new ArrayList<>();
-		                for (int i = 0; i < list.size(); i++) {
-		                    System.out.print(list.get(i) + "  ");
-		                }
-		                System.out.println();
 				        for (int i = 0; i < list.size(); i++ ) 
 				        	optlist.add(list.get(i));
 				    	}
