@@ -1,9 +1,5 @@
-/**
- * 
- */
 package gui;
 
-import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -24,10 +20,6 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
-import javafx.scene.text.Text;
-import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
 
 public class MainWindowController implements Initializable {
@@ -93,7 +85,7 @@ public class MainWindowController implements Initializable {
 	}
 	
 	@FXML
-	private void handleButtonAction(ActionEvent event) throws IOException, InterruptedException{
+	private void handleButtonAction(ActionEvent event) {
 		stage = (Stage) mainPane.getScene().getWindow();
 	    Parent root;
 		if(event.getSource()==generateButton){   
@@ -108,24 +100,20 @@ public class MainWindowController implements Initializable {
 				mainData = new DataManager();
 				mainData.generateItems();
 				if(Parameters.itemsNumber<10000)print(mainData.printItems(mainData.getItems()),itemsArea);
-				else print("Zbyt wiele przedmiotów ¿eby wyœwietliæ",itemsArea);
+				else print("Zbyt wiele przedmiotï¿½w ï¿½eby wyï¿½wietliï¿½",itemsArea);
 				long stopTime = System.currentTimeMillis();
 				print("\nWygenerowano w: " + (stopTime - startTime) + "ms\n",itemsArea);
 				});
 			thread.start();
-			
 			startButton.setDisable(false);
-			
-			
-			
 		}else if(event.getSource()==startButton){  
 			Parameters.stop = false;
 			stopButton.setDisable(false);
 			startButton.setDisable(true);
 			Thread thread2 = new Thread(() -> {
 				resultArea.clear();
-				print("Liczba przedmiotów: " + mainData.getItems().size(),resultArea);
-				print("Rozmiar przedmiotów: "+ mainData.getTotalWeight(),resultArea);
+				print("Liczba przedmiotï¿½w: " + mainData.getItems().size(),resultArea);
+				print("Rozmiar przedmiotï¿½w: "+ mainData.getTotalWeight(),resultArea);
 				print("Rozmiar kontenera: "+ mainData.getContainerVolume(),resultArea);
 
 				print("\nWyniki:\n",resultArea);
@@ -138,7 +126,6 @@ public class MainWindowController implements Initializable {
 				stopButton.setDisable(true);
 			});
 			thread2.start();
-			
 
 		}else if(event.getSource()==stopButton){  
 			Parameters.stop = true;
@@ -149,17 +136,15 @@ public class MainWindowController implements Initializable {
 		}
 		
 	}
-	
+	//old bad coding, need to fix this asap
 	DataManager dmnf;
 	DataManager dmff;
 	DataManager dmbf;
 	DataManager dmbab;
-
 	DataManager dmnfInc;
 	DataManager dmffInc;
 	DataManager dmbfInc;
 	DataManager dmbabInc;
-	
 	DataManager dmnfDec;
 	DataManager dmffDec;
 	DataManager dmbfDec;
@@ -183,19 +168,16 @@ public class MainWindowController implements Initializable {
 			dmbf = new BruteForce(mainData.getItems()).solve();
 			long stopTime = System.currentTimeMillis();
 			print("BruteForce algorithm: \t" + dmbf.getResult() + " (Czas: " + (stopTime - startTime) + "ms)",resultArea);
-			
 		}
 		if(babRandom.isSelected()){
-
 			long startTime = System.currentTimeMillis();
 			dmbab = new BranchAndBound(mainData.getItems()).solve();
 			long stopTime = System.currentTimeMillis();
-			if(Parameters.stop == false)print("B & B algorithm: \t\t" + dmbab.getResult() + " (Czas: " + (stopTime - startTime) + "ms)",resultArea);
+			if(!Parameters.stop)print("B & B algorithm: \t\t" + dmbab.getResult() + " (Czas: " + (stopTime - startTime) + "ms)",resultArea);
 			
 		}
-		
 		if(nfInc.isSelected() || ffInc.isSelected() || bfInc.isSelected() || babInc.isSelected()){
-			print("\nRosn¹co: ",resultArea);
+			print("\nRosnï¿½co: ",resultArea);
 			mainData.sortInc();
 		}
 		if(nfInc.isSelected()){
@@ -215,45 +197,44 @@ public class MainWindowController implements Initializable {
 			dmbfInc = new BruteForce(mainData.getItemsInc()).solve();
 			long stopTime = System.currentTimeMillis();
 			print("BruteForce algorithm: \t" + dmbfInc.getResult() + " (Czas: " + (stopTime - startTime) + "ms)",resultArea);
-			
 		}
 		if(babInc.isSelected()){
 			long startTime = System.currentTimeMillis();
 			dmbabInc = new BranchAndBound(mainData.getItemsInc()).solve();
 			long stopTime = System.currentTimeMillis();
-			if(Parameters.stop == false)print("B & B algorithm: \t\t" + dmbabInc.getResult() + " (Czas: " + (stopTime - startTime) + "ms)",resultArea);
-			
+			if(!Parameters.stop)print("B & B algorithm: \t\t" + dmbabInc.getResult() + " (Czas: " + (stopTime - startTime) + "ms)",resultArea);
 		}
-		
-		
+
 		if(nfDec.isSelected() || ffDec.isSelected() || bfDec.isSelected() || babDec.isSelected()){
-			print("\nMalej¹co: ",resultArea);
+			print("\nMalejï¿½co: ",resultArea);
 			mainData.sortDec();
 		}
+
 		if(nfDec.isSelected()){
 			long startTime = System.currentTimeMillis();
 			dmnfDec = new NextFit(mainData.getItemsDec()).solve();
 			long stopTime = System.currentTimeMillis();
 			print("Next fit algorithm: \t\t" + dmnfDec.getResult() + " (Czas: " + (stopTime - startTime) + "ms)",resultArea);
 		}
+
 		if(ffDec.isSelected()){
 			long startTime = System.currentTimeMillis();
 			dmffDec = new FirstFit(mainData.getItemsDec()).solve();
 			long stopTime = System.currentTimeMillis();
 			print("First fit algorithm: \t\t" + dmffDec.getResult() + " (Czas: " + (stopTime - startTime) + "ms)",resultArea);
 		}
+
 		if(bfDec.isSelected()){
 			long startTime = System.currentTimeMillis();
 			dmbfDec = new BruteForce(mainData.getItemsDec()).solve();
 			long stopTime = System.currentTimeMillis();
 			print("BruteForce algorithm: \t" + dmbfDec.getResult() + " (Czas: " + (stopTime - startTime) + "ms)",resultArea);
-			
 		}
 		if(babDec.isSelected()){
 			long startTime = System.currentTimeMillis();
 			dmbabDec = new BranchAndBound(mainData.getItemsDec()).solve();
 			long stopTime = System.currentTimeMillis();
-			if(Parameters.stop == false)print("B & B algorithm: \t\t" + dmbabDec.getResult() + " (Czas: " + (stopTime - startTime) + "ms)",resultArea);
+			if(!Parameters.stop)print("B & B algorithm: \t\t" + dmbabDec.getResult() + " (Czas: " + (stopTime - startTime) + "ms)",resultArea);
 		}
 	}
 	
@@ -284,59 +265,55 @@ public class MainWindowController implements Initializable {
 				print("================================",resultArea);
 				print(dmbab.printContainers(),resultArea);
 			}
-			
-	
 			if(nfInc.isSelected()){
 				print("\n================================",resultArea);
-				print("Next Fit rosn¹co: ", resultArea);
+				print("Next Fit rosnï¿½co: ", resultArea);
 				print("================================",resultArea);
 				print(dmnfInc.printContainers(),resultArea);
 			}
 			if(ffInc.isSelected()){
 				print("\n================================",resultArea);
-				print("First Fit rosn¹co: ", resultArea);
+				print("First Fit rosnï¿½co: ", resultArea);
 				print("================================",resultArea);
 				print(dmffInc.printContainers(),resultArea);
 			}
 			if(bfInc.isSelected()){
 				print("\n================================",resultArea);
-				print("Brute Force rosn¹co: ", resultArea);
+				print("Brute Force rosnï¿½co: ", resultArea);
 				print("================================",resultArea);
 				print(dmbfInc.printContainers(),resultArea);
 			}
 			if(babInc.isSelected()){
 				print("\n================================",resultArea);
-				print("B & B rosn¹co: ", resultArea);
+				print("B & B rosnï¿½co: ", resultArea);
 				print("================================",resultArea);
 				print(dmbabInc.printContainers(),resultArea);
 			}
-			
-			
 			if(nfDec.isSelected()){
 				print("\n================================",resultArea);
-				print("Next Fit malej¹co: ", resultArea);
+				print("Next Fit malejï¿½co: ", resultArea);
 				print("================================",resultArea);
 				print(dmnfDec.printContainers(),resultArea);
 			}
 			if(ffDec.isSelected()){
 				print("\n================================",resultArea);
-				print("First Fit malej¹co: ", resultArea);
+				print("First Fit malejï¿½co: ", resultArea);
 				print("================================",resultArea);
 				print(dmffDec.printContainers(),resultArea);
 			}
 			if(bfDec.isSelected()){
 				print("\n================================",resultArea);
-				print("Brute Force malej¹co: ", resultArea);
+				print("Brute Force malejï¿½co: ", resultArea);
 				print("================================",resultArea);
 				print(dmbfDec.printContainers(),resultArea);
 			}
 			if(babDec.isSelected()){
 				print("\n================================",resultArea);
-				print("B & B malej¹co: ", resultArea);
+				print("B & B malejï¿½co: ", resultArea);
 				print("================================",resultArea);
 				print(dmbabDec.printContainers(),resultArea);
 			}
-		}else print("Zbyt du¿o przedmiotów ¿eby wyœwietliæ kontenery", resultArea);
+		}else print("Zbyt duï¿½o przedmiotï¿½w ï¿½eby wyï¿½wietliï¿½ kontenery", resultArea);
 	}
 	
 	
@@ -351,7 +328,6 @@ public class MainWindowController implements Initializable {
 		Platform.runLater( () -> ta.appendText(s + "\n") );
 	}
 
-	
 
 	public void showStage(Parent root, Stage stage){
 		 Scene scene = new Scene(root);

@@ -1,14 +1,7 @@
-/**
- * 
- */
 package binpacking;
 
 import java.util.ArrayList;
 
-/**
- * @author Kolatka
- *
- */
 public class NextFit {
 
 	DataManager dm;
@@ -23,17 +16,13 @@ public class NextFit {
 		int containerID = 0;
 		Item item;
 		for(int itemID=0;itemID<itemsCount;itemID++){
-			item = dm.getItems().get(itemID);
 			if(!dm.addItemIntoContainer(containerID,itemID)){
 				dm.addContainer();
 				containerID++;
 				dm.addItemIntoContainer(containerID,itemID);
-
 			}
-			
 		}
 		return dm;
 	}
-	
 	
 }

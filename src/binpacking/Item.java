@@ -1,12 +1,5 @@
-/**
- * 
- */
 package binpacking;
 
-/**
- * @author Kolatka
- *
- */
 public class Item {
 
 	

@@ -1,14 +1,7 @@
-/**
- * 
- */
 package binpacking;
 
 import java.util.ArrayList;
 
-/**
- * @author Kolatka
- *
- */
 public class Container {
 
 	private int id;
@@ -20,7 +13,7 @@ public class Container {
 		this.id = id;
 		this.maxVolume = maxVolume;
 		this.leftVolume = maxVolume;
-		this.items = new ArrayList<Item>();
+		this.items = new ArrayList<>();
 	}
 	
 	

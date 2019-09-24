@@ -1,17 +1,8 @@
-/**
- * 
- */
 package binpacking;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.Random;
 
-/**
- * @author Kolatka
- *
- */
 public class DataManager {
 
 	private ArrayList<Item> items;
@@ -25,20 +16,17 @@ public class DataManager {
 	private int containerVolume = Parameters.containerVolume;
 
 	public DataManager(){
-		this.containers = new ArrayList<Container>();
-		this.items =  new ArrayList<Item>();
+		this.containers = new ArrayList<>();
+		this.items = new ArrayList<>();
 		
 		addContainer();
 	}
 	
 	public void generateItems(){
-		//ArrayList<Item> items = new ArrayList<Item>();
-	
 		int max = getRandomNumber(itemsNumber,itemsNumber);
-		for(int i=0;i<max;i++){
-			items.add(new Item(i,getRandomNumber(minItemWeight,maxItemWeight)));
+		for(int i=0;i<max;i++) {
+			items.add(new Item(i, getRandomNumber(minItemWeight, maxItemWeight)));
 		}
-		//return items;
 	}
 	
 	public void addContainer(){
@@ -56,8 +44,7 @@ public class DataManager {
 			container.setLeftVolume(container.getLeftVolume()-item.getWeight());
 			item.setPacked(true);
 			return true;
-		}else 
-			return false;
+		}else return false;
 	}
 	
 	private int getRandomNumber(int min, int max){
@@ -66,40 +53,36 @@ public class DataManager {
 	}
 
 	public String printItems(ArrayList<Item> items){
-		String s ="ID\t\tWAGA";
+		StringBuilder s = new StringBuilder("ID\t\tWAGA");
 		int size = items.size();
 		for(int i=0; i<size; i++){
-			//System.out.println(getItems().get(i).getId() + "\t" + getItems().get(i).getWeight() + "\t" + getItems().get(i).isPacked());
-			s += "\n" + items.get(i).getId() + "\t\t" + items.get(i).getWeight();
-
+			s.append("\n").append(items.get(i).getId()).append("\t\t").append(items.get(i).getWeight());
 		}
-		return s;
+		return s.toString();
 	}
 	
 	public String printContainers(){
-		String s = "";
+		StringBuilder s = new StringBuilder();
 		int size = getContainers().size();
 		for(int i=0; i<size; i++){
-			s += ("\nID\tWOLNE");
-			s += ("\n" + getContainers().get(i).getId() + "\t" + getContainers().get(i).getLeftVolume());
+			s.append("\nID\tWOLNE");
+			s.append("\n").append(getContainers().get(i).getId()).append("\t").append(getContainers().get(i).getLeftVolume());
 			int itemsSize = getContainers().get(i).getItems().size();
 			if (itemsSize>0){
-				s += ("\n\t\t\tID\t\tWaga");
+				s.append("\n\t\t\tID\t\tWaga");
 				for(int j=0; j<itemsSize; j++){
-					s += ("\n\t\t\t" + getContainers().get(i).getItems().get(j).getId() + "\t\t" + getContainers().get(i).getItems().get(j).getWeight());
+					s.append("\n\t\t\t").append(getContainers().get(i).getItems().get(j).getId()).append("\t\t").append(getContainers().get(i).getItems().get(j).getWeight());
 				}
 			}
-			s += ("\n---------------------------------------------------");
+			s.append("\n---------------------------------------------------");
 		}
-		return s;
+		return s.toString();
 	}
 
-	// Result of packing
 	public int getResult(){
 		return getContainers().size();
 	}
-	
-	// The best possible result
+
 	public int getLowerBound(){
 		return (int) Math.ceil((double)getTotalWeight()/containerVolume);
 	}
@@ -112,8 +95,7 @@ public class DataManager {
 		}
 		return totalWeight;
 	}
-	
-	
+
 	public void sort(){
 		 int max = maxItemWeight;
 		 int size = items.size();
@@ -124,15 +106,12 @@ public class DataManager {
      void radixSort(int exp)
     {
     	int size = items.size();
-    	ArrayList<Item> output = new ArrayList<Item>();
+    	ArrayList<Item> output = new ArrayList<>();
     	Item item = new Item(-1,-1);
-
     	for (int i = 0; i < size; i++){
     		output.add(item);
     	}
-    	
         int count[] = new int[10];
-
         for (int i = 0; i < size; i++){
             count[ (items.get(i).getWeight()/exp)%10 ]++;
         }
@@ -146,28 +125,7 @@ public class DataManager {
         
         itemsInc = output;
     }
-   
-     
-     public void sortInc2(){     
-    	 ArrayList<Item> items = this.items;
-         for(int i=1;i<items.size();i++){
-              
-             Item key = items.get(i);
-              
-             for(int j= i-1;j>=0;j--){
-                 if(key.getWeight()<items.get(j).getWeight()){
-                	 items.set(j+1,items.get(j));
-                     if(j==0){
-                    	 items.set(0, key);
-                     }
-                 }else{
-                	 items.set(j+1,key);
-                     break;
-                 }
-             }
-         }  
-         itemsInc = items;
-     }
+
      
      public void sortInc() {
     	 ArrayList<Item> items = this.items;
@@ -206,9 +164,7 @@ public class DataManager {
 		getItems().set(id1, getItems().get(id2));
 		getItems().set(id2, temp);
 	}
-	
-	//--------------------------------------------------------------------------
-	
+
 	public ArrayList<Item> getItems() {
 		return items;
 	}
@@ -217,9 +173,6 @@ public class DataManager {
 		this.items = items;
 	}
 
-	
-	
-	
 	public ArrayList<Item> getItemsInc() {
 		return itemsInc;
 	}
@@ -242,9 +195,6 @@ public class DataManager {
 	public void setContainers(ArrayList<Container> containers) {
 		this.containers = containers;
 	}
-
-	
-	
 
 	public int getMinItemWeight() {
 		return minItemWeight;
@@ -275,8 +225,5 @@ public class DataManager {
 	public void setContainerVolume(int containerVolume) {
 		this.containerVolume = containerVolume;
 	}
-	
-	
-	
-	
+
 }

@@ -1,14 +1,7 @@
-/**
- * 
- */
 package binpacking;
 
 import java.util.ArrayList;
 
-/**
- * @author Kolatka
- *
- */
 public class FirstFit {
 	DataManager dm;
 	
@@ -23,13 +16,11 @@ public class FirstFit {
 		int containerID;
 		int containersCount;
 		for(int itemID=0;itemID<itemsCount;itemID++){
-			item = dm.getItems().get(itemID);
 			containersCount = dm.getContainers().size();
 			packed = false;
 			containerID=0;
 			while(containerID<containersCount && !packed){
 				if(dm.addItemIntoContainer(containerID,itemID)){
-					
 					packed = true;	
 				}
 				containerID++;
@@ -40,7 +31,6 @@ public class FirstFit {
 			}
 			
 		}
-		
 		return dm;
 	}
 }
