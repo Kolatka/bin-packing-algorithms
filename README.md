@@ -3,7 +3,7 @@ It's about placing goods of various sizes into the smallest number of the contai
 
 With a small number of elements it's easy to find the optimal solution. However, with their growth it becomes almost impossible. This is due to the fact that by placing subsequent elements in the containers we can't know if we are doing this in the best way. This makes it an NP-difficult problem. However, there are many approximation algorithms, e.g. First Fit, Next Fit, Best Fit. With more elements, they will not find an ideal solution, but very close to optimal.
 
-# Impelemnted algorithms
+# Implemented algorithms
 
 * Next Fit
 * First Fit
