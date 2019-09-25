@@ -17,7 +17,7 @@ Branch and bound method consists in dividing the set of acceptable solutions int
 
 # How to use
 
-Main windows has 4 panels. On the left top you can generate set of elements. To the right of this items are displayed. The lower left panel contains algorithm selection options. Result of this process is displayed in bottom right text area.
+Main window has 4 panels. On the left top you can generate set of elements. To the right of this items are displayed. The lower left panel contains algorithm selection options. Result of this process is displayed in bottom right text area.
 
 ![Main Window](https://i.imgur.com/KsuRPe4.png)
 
