@@ -159,10 +159,10 @@ public class MainWindowController implements Initializable {
 				print("\nRandom: ", resultArea);
 			} else if (i == 4) {
 				mainData.sortInc();
-				print("\nDecreasing: ", resultArea);
+				print("\nDesdcending: ", resultArea);
 			} else if (i == 8) {
 				mainData.sortDec();
-				print("\nIncreasing: ", resultArea);
+				print("\nAscending: ", resultArea);
 			}
 			long startTime = System.currentTimeMillis();
 			if (checkBox.getId().equals("nfRandom") && checkBox.isSelected()) {

@@ -94,8 +94,8 @@
                         <Label text="B&amp;B" GridPane.halignment="CENTER" GridPane.rowIndex="4" />
                         <Label text="Algorithm" GridPane.halignment="CENTER" />
                         <Label text="Random" GridPane.columnIndex="1" GridPane.halignment="CENTER" />
-                        <Label text="Increasing" GridPane.columnIndex="2" GridPane.halignment="CENTER" />
-                        <Label text="Decreasing" GridPane.columnIndex="3" GridPane.halignment="CENTER" />
+                        <Label text="Ascending" GridPane.columnIndex="2" GridPane.halignment="CENTER" />
+                        <Label text="Descending" GridPane.columnIndex="3" GridPane.halignment="CENTER" />
                         <CheckBox fx:id="nfRandom" mnemonicParsing="false" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
                         <CheckBox fx:id="ffRandom" mnemonicParsing="false" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER" />
                         <CheckBox fx:id="babInc" mnemonicParsing="false" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="4" GridPane.valignment="CENTER" />
